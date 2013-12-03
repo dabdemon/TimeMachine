@@ -1,0 +1,63 @@
+{
+    "versionLabel": "1.0",
+    "uuid": "2779e267-762e-4c9b-8662-c3f0a94b7592",
+    "appKeys": {},
+    "longName": "Time Machine 2.0",
+    "versionCode": 1,
+    "capabilities": [
+        "configurable"
+    ],
+    "shortName": "Time Machine 2.0",
+    "companyName": "dabdemon",
+    "watchapp": {
+        "watchface": false
+    },
+    "resources": {
+        "media": [
+            {
+                "characterRegex": "[0-9:]",
+                "type": "font",
+                "name": "FUTURA_CONDENSED_53",
+                "file": "fonts/futura_condensed_bold-webfont.ttf"
+            },
+            {
+                "characterRegex": "[ 0-9:]",
+                "type": "font",
+                "name": "FUTURA_30",
+                "file": "fonts/futura.ttf"
+            },
+            {
+                "characterRegex": "[0-9A-Za-z ]",
+                "type": "font",
+                "name": "FUTURA_18",
+                "file": "fonts/futura.ttf"
+            },
+            {
+                "characterRegex": "[0-9A-Za-z :]",
+                "type": "font",
+                "name": "FUTURA_14",
+                "file": "fonts/futura.ttf"
+            },
+            {
+                "type": "png",
+                "name": "BT_DISCONNECTED",
+                "file": "images/bluetooth_Off_white_small.png"
+            },
+            {
+                "type": "png",
+                "name": "BT_CONNECTED",
+                "file": "images/bluetooth_white_small2.png"
+            },
+            {
+                "type": "png",
+                "name": "BATT_CHAR",
+                "file": "images/batt_char.png"
+            },
+            {
+                "type": "png",
+                "name": "BATT_EMPTY",
+                "file": "images/batt_empty.png"
+            }
+        ]
+    }
+}
