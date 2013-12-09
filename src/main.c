@@ -43,14 +43,9 @@ static int LAYER_ICONS[] = {
 	TextLayer *BT_Layer;			//Layer for the BT connection
 	TextLayer *count_down;			//Layer for the timer/chrono
 	TextLayer *label_layer;			//Layer for the label
-	Layer *unit_marker;
 	
 	bool setting_blink_state = true; 
 
-/*
-	TextLayer *Max_Layer;			//Layer for the Max Temperature
-	TextLayer *Min_Layer;			//Layer for the Min Temperature
-	*/
 	static GBitmap *BT_image;
 	static BitmapLayer *BT_icon_layer; //Layer for the BT connection
 	
@@ -137,12 +132,26 @@ static int LAYER_ICONS[] = {
 	}
 
 	void draw_setting_unit() {
-	  layer_mark_dirty(unit_marker);  
+	  //layer_mark_dirty(unit_marker);  
+		if (setting_unit == SETTING_MINUTE){
+				if (translate_sp){text_layer_set_text(label_layer, " Establecer Min");}
+				else {text_layer_set_text(label_layer, " Set Minutes");}
+		}
+		else if (setting_unit == SETTING_SECOND){
+				if (translate_sp){text_layer_set_text(label_layer, " Establecer Seg");}
+				else {text_layer_set_text(label_layer, " Set Seconds");}
+		}
+		else if (setting_unit == SETTING_HOUR){
+				if (translate_sp){text_layer_set_text(label_layer, " Establecer Horas");}
+				else {text_layer_set_text(label_layer, " Set Hours");}
+		}
 	}
 
 	void toggle_setting_mode(ClickRecognizerRef recognizer, void *context) {
 	  if (current_state == SETTING) {
 		current_state = DONE;
+		if (translate_sp){text_layer_set_text(label_layer, " Temporizador");}
+		else {text_layer_set_text(label_layer, " Timer");}
 	  }
 	  else {
 		  if (chrono == false){ //TIMER CONTROL
@@ -155,21 +164,22 @@ static int LAYER_ICONS[] = {
 	  }
 	}//toggle_setting_mode END
 
+/*
 	void unit_marker_update_callback(Layer *me, GContext* ctx) {
 	  (void)me;
 	
 	  int width = 32;
 	  int start = 8 + (width + 14) * setting_unit;
 	
-	 // if (current_state == SETTING && setting_blink_state) {
+	  if (current_state == SETTING && setting_blink_state) {
 		graphics_context_set_stroke_color(ctx, GColorWhite);
 	
 		for (int i = 0; i < 4; i++) {
 		  graphics_draw_line(ctx, GPoint(start, 160 + i), GPoint(start + width, 160 + i)); //130 was 95
-		//}
+		}
 	  }
 	} //unit_marker_update_callback END
-
+*/
 
 	void select_pressed(ClickRecognizerRef recognizer, void *context) {
 	//TIMER CONTROL
@@ -304,8 +314,8 @@ static int LAYER_ICONS[] = {
 	}
 	
 	void handle_second_setting() {
-	  setting_blink_state = !setting_blink_state;
-	  layer_mark_dirty(unit_marker);
+	  //setting_blink_state = !setting_blink_state;
+	  //layer_mark_dirty(unit_marker);
 	}
 
 // Time Logic END //
@@ -674,11 +684,6 @@ void handle_init(void)
 	  	update_countdown();
 
 	
-		// Unit selector
-		unit_marker = layer_create(TIMER_FRAME);
-		layer_set_update_proc(unit_marker,unit_marker_update_callback);
-		layer_add_child(window_get_root_layer(my_window), unit_marker);
-
 
 
 	// Ensures time is displayed immediately (will break if NULL tick event accessed).
@@ -724,7 +729,6 @@ void handle_deinit(void)
 	text_layer_destroy(Weekday_Layer);
 	text_layer_destroy(label_layer);
 	text_layer_destroy(count_down);
-	layer_destroy(unit_marker);
 	
 	//Deallocate custom fonts
 	fonts_unload_custom_font(font_date);
