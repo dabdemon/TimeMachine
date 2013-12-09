@@ -14,13 +14,13 @@ PBL_APP_INFO(MY_UUID,
 */
 
 #define WEEKDAY_FRAME	  (GRect(5,  2, 95, 168-145)) 
-#define BATT_FRAME 	      (GRect(100,  4, 40, 168-146)) 
+#define BATT_FRAME 	      (GRect(98,  4, 40, 168-146)) 
 #define BT_FRAME 	      (GRect(125,  4, 25, 168-146))  
 #define TIME_FRAME        (GRect(0, 15, 144, 168-16)) 
 #define DATE_FRAME        (GRect(1, 69, 139, 168-62)) 
 
 #define TIMER_FRAME		(GRect(0, 120, 144, 168-62))
-#define TIMER_LABEL		(GRect(0, 90, 144, 168-148))
+#define TIMER_LABEL		(GRect(0, 95, 144, 168-148))
 
 	
 //******************//
@@ -161,12 +161,12 @@ static int LAYER_ICONS[] = {
 	  int width = 32;
 	  int start = 8 + (width + 14) * setting_unit;
 	
-	  if (current_state == SETTING && setting_blink_state) {
+	 // if (current_state == SETTING && setting_blink_state) {
 		graphics_context_set_stroke_color(ctx, GColorWhite);
 	
 		for (int i = 0; i < 4; i++) {
 		  graphics_draw_line(ctx, GPoint(start, 160 + i), GPoint(start + width, 160 + i)); //130 was 95
-		}
+		//}
 	  }
 	} //unit_marker_update_callback END
 
@@ -343,9 +343,11 @@ static void handle_battery(BatteryChargeState charge_state) {
 	  Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_CHAR);
 	  bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
   } else {
-    snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
+	  //Kill previous image to don't display a wrong one
+	  bitmap_layer_set_bitmap(Batt_icon_layer, NULL);
+    //snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
 	  //if ((battery_text[0] == "1" || battery_text[0] == "2")  && strlen(battery_text)<4) //If the charge is between 0% and 20%
-	  if (charge_state.charge_percent<20) //If the charge is between 0% and 20%
+	  if (charge_state.charge_percent<10) //If the charge is between 0% and 10%
 	  {
 		Batt_image = gbitmap_create_with_resource(RESOURCE_ID_BATT_EMPTY);
 	  	bitmap_layer_set_bitmap(Batt_icon_layer, Batt_image);
@@ -375,8 +377,8 @@ static void handle_bluetooth(bool connected)
 	}
 	else
 	{
-		BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_DISCONNECTED);
-  		bitmap_layer_set_bitmap(BT_icon_layer, BT_image);
+		//BT_image = gbitmap_create_with_resource(RESOURCE_ID_BT_DISCONNECTED);
+  		bitmap_layer_set_bitmap(BT_icon_layer, NULL);
 		if (BTConnected == true){
 			//Vibes to alert disconnection
 			vibes_long_pulse();
@@ -598,10 +600,10 @@ void handle_init(void)
 	
 	//Create the main window
 	my_window = window_create(); 
+	window_set_fullscreen(my_window,true);
 	window_stack_push(my_window, true /* Animated */);
 	window_set_background_color(my_window, GColorBlack);
-	window_set_fullscreen(my_window,true);
-	window_set_status_bar_icon(my_window, NULL);
+
 	
 	//Load the custom fonts
 	res_t = resource_get_handle(RESOURCE_ID_FUTURA_CONDENSED_53); // Time font
@@ -654,8 +656,8 @@ void handle_init(void)
 	
 		// TIMER LABEL
 		label_layer = text_layer_create(TIMER_LABEL);
-		text_layer_set_text_color(label_layer, GColorWhite);
-		text_layer_set_background_color(label_layer, GColorClear);
+		text_layer_set_text_color(label_layer, GColorBlack);
+		text_layer_set_background_color(label_layer, GColorWhite);
 		text_layer_set_font(label_layer, font_date);
 		text_layer_set_text_alignment(label_layer, GTextAlignmentLeft);
 		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(label_layer)); 
@@ -671,12 +673,12 @@ void handle_init(void)
 		layer_add_child(window_get_root_layer(my_window), text_layer_get_layer(count_down)); 
 	  	update_countdown();
 
-	/*
+	
 		// Unit selector
 		unit_marker = layer_create(TIMER_FRAME);
 		layer_set_update_proc(unit_marker,unit_marker_update_callback);
 		layer_add_child(window_get_root_layer(my_window), unit_marker);
-*/
+
 
 
 	// Ensures time is displayed immediately (will break if NULL tick event accessed).
